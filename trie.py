@@ -17,12 +17,7 @@ class TrieNodeIterative:
         node = self
         for letter in word:
             node.length += 1
-            try:
-                node = node.children[letter]
-            except KeyError:
-                # Add a branch if we haven't seen this letter yet
-                node.children[letter] = TrieNodeIterative(letter)
-                node = node.children[letter]
+            node = node.children.setdefault(letter, TrieNodeIterative(letter))
         node.is_word = True
         node.length += 1
 

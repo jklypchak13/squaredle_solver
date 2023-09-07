@@ -6,17 +6,37 @@ import time
 
 MIN_WORD_LEN = 4
 DICT_SAVE_NAME = 'dict.pkl'
+INV_CHARACTER = '-'
 
 
 def is_valid(i, j, max):
     return 0 <= i < max and 0 <= j < max
 
 
+def process_input_file(file_name):
+    board = []
+    data = []
+    with open(file_name, 'r') as fp:
+        data = fp.readlines()
+
+    for line in data:
+        # Assume spaces and - are empty spaces
+        row = []
+        for char in line:
+            if char == ' ' or char == INV_CHARACTER:
+                row.append(INV_CHARACTER)
+            elif char != '\n':
+                row.append(char.lower())
+        board.append(row)
+    return board
+
+
 def build_dictionary(file_name):
     root = TrieNodeIterative('')
     with open(file_name, 'r') as fp:
-        data = fp.readlines()
-        for line in data:
+        line = 'inv'
+        while line != '':
+            line = fp.readline()
             root.add(line.strip())
     return root
 
@@ -59,7 +79,7 @@ def search_board(dictionary: TrieNodeIterative, board):
 
 
 if __name__ == '__main__':
-
+    board = process_input_file('input.txt')
     start = time.time()
     root = None
     # Get Dictionary
@@ -70,13 +90,6 @@ if __name__ == '__main__':
         root = build_dictionary('master_dictionary.txt')
     print(f'Dictionary Load Time: {time.time() - start}')
     start = time.time()
-    board = [
-        ['c', 'n', 'v', 't'],
-        ['a', 'c', 'o', 'i'],
-        ['d', 'p', 'e', 't'],
-        ['e', 't', 'u', 'm'],
-    ]
-
     # Perform Search
     result = search_board(root, board)
     print(f'Search Time: {time.time() - start}')
